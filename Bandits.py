@@ -18,7 +18,7 @@ class Bandit:
         self.mean = (1 - 1.0 / self.N) * self.mean + 1.0 / self.N * x
 
 
-def run_experiment(m1, m2, m3, eps, N):
+def play_epsilon(m1, m2, m3, eps, N):
     bandits = [Bandit(m1), Bandit(m2), Bandit(m3)]
 
     data = np.empty(N)
@@ -37,13 +37,6 @@ def run_experiment(m1, m2, m3, eps, N):
         data[i] = x
     cumulative_average = np.cumsum(data) / (np.arange(N) + 1)
 
-    # plot moving average ctr
-    # plt.plot(cumulative_average)
-    # plt.plot(np.ones(N) * m1)
-    # plt.plot(np.ones(N) * m2)
-    # plt.plot(np.ones(N) * m3)
-    # plt.xscale('log')
-    # plt.show()
 
     for b in bandits:
         print(b.mean)
@@ -52,9 +45,9 @@ def run_experiment(m1, m2, m3, eps, N):
 
 
 if __name__ == '__main__':
-    c_1 = run_experiment(1.0, 2.0, 3.0, 0.1, 100000)
-    c_05 = run_experiment(1.0, 2.0, 3.0, 0.05, 100000)
-    c_01 = run_experiment(1.0, 2.0, 3.0, 0.01, 100000)
+    c_1 = play_epsilon(1.0, 2.0, 3.0, 0.1, 100000)
+    c_05 = play_epsilon(1.0, 2.0, 3.0, 0.05, 100000)
+    c_01 = play_epsilon(1.0, 2.0, 3.0, 0.01, 100000)
 
     # log scale plot
     plt.plot(c_1, label='eps = 0.1')
