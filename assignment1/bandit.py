@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import os
 
 class bandit:
     def __init__(self, k):
@@ -88,7 +88,7 @@ class bandit:
         avg_reward_overtime = []
         for t in range(1, timesteps+1):
             avg_reward_overtime.append(self.iterate(t))
-            print("\r%d"%(t),end="\r")
+            #print("\r%d"%(t),end="\r")
 
         self.avg_reward_overtime = avg_reward_overtime
 
@@ -100,7 +100,7 @@ class bandit:
         plt.plot(timesteps, self.avg_reward_overtime, label=self.name)
         plt.legend()
         #plt.xscale('log')
-        plt.savefig(self.name+'.png', bbox_inches='tight')
+        plt.savefig(os.path.join(savedir, self.name+'.png'), bbox_inches='tight')
 
 
 #initialize bandit of size 10
