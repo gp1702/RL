@@ -17,6 +17,7 @@ class bandit:
         self.avg_reward = 0.
 
     def getActionValue(self, action):
+        #get action reward using normal dist with mean as true value and variance 1
         return np.random.normal(self.true_rewards[action], 1, 1)[0]
 
     def epsilongreedy(self):
@@ -41,10 +42,11 @@ class bandit:
 
 
     def updateRewards(self, action, reward):
-        self.expected_rewards[action] = (self.expected_rewards[action] * (self.actioncounts[action]-1) + reward) / self.actioncounts[action]
+        #self.expected_rewards[action] = (self.expected_rewards[action] * (self.actioncounts[action]-1) + reward) / self.actioncounts[action]
+        self.expected_rewards[action] = self.expected_rewards[action] + (reward - self.expected_rewards[action])/self.actioncounts[action]
 
     def iterate(self, t):
-        #choose an action
+        #choose an action, return arm number
         action = self.chooseAction()
 
         #get the reward of the action
@@ -73,11 +75,12 @@ class bandit:
     def plot(self, savedir):
         timesteps = range(1, self.timesteps+1)
         plt.plot(timesteps, self.avg_reward_overtime)
+        plt.xscale('log')
         plt.savefig(self.name+'.png', bbox_inches='tight')
 
 
 #initialize bandit of size 10
 trybandit = bandit(k=10)
 #run bandit
-trybandit.start(2000, name="eps-greedy")
+trybandit.start(1000, name="eps-greedy")
 trybandit.plot("plots")
