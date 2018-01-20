@@ -20,33 +20,47 @@ class bandit:
         #epsilon greedy method
         if(eps>self.eps):
             #get greedy action and resolve ties randomly
-            action = np.random.choice(np.flatnonzero(self.expected_rewards == self.expected_rewards.max()))
+            N = self.alphas + self.betas
+            expected_rewards = np.divide(self.alphas, N, where=N!=0)
+
+            action = np.random.choice(np.flatnonzero(expected_rewards == expected_rewards.max()))
         else:
             #get random action
-            action = np.random.choice(3)
+            action = np.random.choice(self.k)
 
         return action
 
     def ucb(self, t):
-        if(t>1):
-            #expected rewards till t-1 for all actions
-            Q_a = self.expected_rewards
-            #count till t-1 for all actions
-            N = self.actioncounts
-            #add ucb term to get new expected reward
-            Q_a = Q_a + self.c * np.sqrt(np.divide(np.log(t-1), N, where=N!=0))
-            #get greedy action and resolve ties randomly
-            action = np.random.choice(np.flatnonzero(Q_a == Q_a.max()))
-        else:
-            action = np.random.choice(np.flatnonzero(self.expected_rewards == self.expected_rewards.max()))
+        #count till t-1 for all actions
+        N = self.alphas + self.betas
+        #expected rewards till t-1 for all actions
+        Q_a = np.divide(self.alphas, N, where=N!=0)
+        Q_a = Q_a + self.c * np.sqrt(np.divide(np.log(t), N+1.))
+
+        #Q_a = Q_a + self.c * np.sqrt(np.divide(np.log(t-1), N, where=N!=0))
+        #get greedy action and resolve ties randomly
+        action = np.random.choice(np.flatnonzero(Q_a == Q_a.max()))
 
         return action
+
+    def thompson(self):
+        N = self.alphas + self.betas
+        expected_rewards = np.divide(self.alphas, N, where=N!=0)
+        #sample rewards
+        sampled_rewards = np.random.normal(expected_rewards, 1./(N+1.))
+        #pick greedy action
+        action = np.random.choice(np.flatnonzero(sampled_rewards == sampled_rewards.max()))
+
+        return action
+
     def chooseAction(self, t):
         #get action
         if(self.name=="eps-greedy"):
             action = self.epsilongreedy()
         elif(self.name=="ucb"):
             action = self.ucb(t)
+        elif(self.name=="thompson"):
+            action = self.thompson()
 
         #update action count
         self.actioncounts[action] = self.actioncounts[action] + 1
@@ -57,6 +71,8 @@ class bandit:
     def updateRewards(self, action, reward):
         #self.expected_rewards[action] = (self.expected_rewards[action] * (self.actioncounts[action]-1) + reward) / self.actioncounts[action]
         self.expected_rewards[action] = self.expected_rewards[action] + (reward - self.expected_rewards[action])/self.actioncounts[action]
+        self.alphas[action] += reward
+        self.betas[action] += 1. - reward
 
     def iterate(self, t):
         #choose an action, return arm number
@@ -83,6 +99,10 @@ class bandit:
         #maintain expected rewards
         self.expected_rewards = np.zeros(self.k)
         self.actioncounts = np.zeros(self.k)
+        #successes
+        self.alphas = np.zeros(self.k)
+        #failures
+        self.betas = np.zeros(self.k)
         self.avg_reward = 0.
 
         avg_reward_overtime = []
@@ -104,10 +124,12 @@ class bandit:
 
 
 #initialize bandit of size 10
-trybandit = bandit(k=10)
+trybandit = bandit(k=5)
 timesteps = 2000
 #run bandit
 trybandit.start(timesteps, name="eps-greedy", eps=0.01)
 trybandit.plot("plots")
 trybandit.start(timesteps, name="ucb", c=2.)
+trybandit.plot("plots")
+trybandit.start(timesteps, name="thompson")
 trybandit.plot("plots")
