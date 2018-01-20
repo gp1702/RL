@@ -5,7 +5,7 @@ from __future__ import print_function, division
 import numpy as np
 import matplotlib.pyplot as plt
 from Bandits import Bandit
-from optimistic_initial_values import run_experiment as run_experiment_oiv
+from optimisitic_inital_values import run_experiment as run_experiment_oiv
 from ucb import run_experiment as run_experiment_ucb
 
 
@@ -50,12 +50,12 @@ def run_experiment_decaying_epsilon(m1, m2, m3, N):
     cumulative_average = np.cumsum(data) / (np.arange(N) + 1)
 
     # plot moving average ctr
-    plt.plot(cumulative_average)
-    plt.plot(np.ones(N) * m1)
-    plt.plot(np.ones(N) * m2)
-    plt.plot(np.ones(N) * m3)
-    plt.xscale('log')
-    plt.show()
+    # plt.plot(cumulative_average)
+    # plt.plot(np.ones(N) * m1)
+    # plt.plot(np.ones(N) * m2)
+    # plt.plot(np.ones(N) * m3)
+    # plt.xscale('log')
+    # plt.show()
 
     for b in bandits:
         print(b.mean)
@@ -79,12 +79,12 @@ def run_experiment(m1, m2, m3, N):
     cumulative_average = np.cumsum(data) / (np.arange(N) + 1)
 
     # plot moving average ctr
-    plt.plot(cumulative_average)
-    plt.plot(np.ones(N) * m1)
-    plt.plot(np.ones(N) * m2)
-    plt.plot(np.ones(N) * m3)
-    plt.xscale('log')
-    plt.show()
+    # plt.plot(cumulative_average)
+    # plt.plot(np.ones(N) * m1)
+    # plt.plot(np.ones(N) * m2)
+    # plt.plot(np.ones(N) * m3)
+    # plt.xscale('log')
+    # plt.show()
 
     return cumulative_average
 
@@ -93,10 +93,10 @@ if __name__ == '__main__':
     m1 = 1.0
     m2 = 2.0
     m3 = 3.0
-    eps = run_experiment_decaying_epsilon(m1, m2, m3, 100000)
-    oiv = run_experiment_oiv(m1, m2, m3, 100000)
-    ucb = run_experiment_ucb(m1, m2, m3, 100000)
-    bayes = run_experiment(m1, m2, m3, 100000)
+    eps = run_experiment_decaying_epsilon(m1, m2, m3, 2000)
+    oiv = run_experiment_oiv(m1, m2, m3, 2000)
+    ucb = run_experiment_ucb(m1, m2, m3, 2000)
+    bayes = run_experiment(m1, m2, m3, 2000)
 
     # log scale plot
     plt.plot(eps, label='decaying-epsilon-greedy')
