@@ -9,7 +9,7 @@ class bandit:
         self.k = k
         #set rewards for k actions
         self.true_rewards = np.random.normal(0, 1, k)
-
+        self.bestaction = np.random.choice(np.flatnonzero(self.true_rewards == self.true_rewards.max()))
 
     def getActionValue(self, action):
         #get action reward using normal dist with mean as true value and variance 1
@@ -87,7 +87,11 @@ class bandit:
         #update the expected reward for the particular action
         self.updateRewards(action, reward)
 
-        return self.avg_reward
+        #calculate regret
+        regret = self.true_rewards[self.bestaction] - self.true_rewards[action]
+        self.regret = (self.regret * float(t-1) + regret) / float(t)
+
+        return self.regret
 
     def start(self, timesteps, name, c=0, eps=0.01):
         self.timesteps = timesteps
@@ -104,32 +108,35 @@ class bandit:
         #failures
         self.betas = np.zeros(self.k)
         self.avg_reward = 0.
+        self.regret = 0.
 
-        avg_reward_overtime = []
+        regret_overtime = []
         for t in range(1, timesteps+1):
-            avg_reward_overtime.append(self.iterate(t))
+            regret_overtime.append(self.iterate(t))
             #print("\r%d"%(t),end="\r")
 
-        self.avg_reward_overtime = avg_reward_overtime
+        self.regret_overtime = regret_overtime
 
-        return avg_reward_overtime
+        return regret_overtime
 
 
-    def plot(self, savedir):
+    def plot(self, savedir, noshow=False):
         timesteps = range(1, self.timesteps+1)
-        plt.plot(timesteps, self.avg_reward_overtime, label=self.name)
+        plt.plot(timesteps, self.regret_overtime, label=self.name)
         plt.legend()
         #plt.xscale('log')
-        plt.savefig(os.path.join(savedir, self.name+'.png'), bbox_inches='tight')
+        if(noshow is False):
+            plt.show()
+            #plt.savefig(os.path.join(savedir, self.name+'.png'), bbox_inches='tight')
 
 
 #initialize bandit of size 10
-trybandit = bandit(k=5)
-timesteps = 2000
+#trybandit = bandit(k=5)
+#timesteps = 1000
 #run bandit
-trybandit.start(timesteps, name="eps-greedy", eps=0.01)
-trybandit.plot("plots")
-trybandit.start(timesteps, name="ucb", c=2.)
-trybandit.plot("plots")
-trybandit.start(timesteps, name="thompson")
-trybandit.plot("plots")
+#trybandit.start(timesteps, name="eps-greedy", eps=0.01)
+#trybandit.plot("plots", noshow=True)
+#trybandit.start(timesteps, name="ucb", c=2.)
+#trybandit.plot("plots", noshow=True)
+#trybandit.start(timesteps, name="thompson")
+#trybandit.plot("plots")
