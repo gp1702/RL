@@ -43,12 +43,12 @@ def run_experiment(m1, m2, m3, N):
     #   print("bandit nj:", b.N)
 
     # plot moving average ctr
-    plt.plot(cumulative_average)
-    plt.plot(np.ones(N) * m1)
-    plt.plot(np.ones(N) * m2)
-    plt.plot(np.ones(N) * m3)
-    plt.xscale('log')
-    plt.show()
+    # plt.plot(cumulative_average)
+    # plt.plot(np.ones(N) * m1)
+    # plt.plot(np.ones(N) * m2)
+    # plt.plot(np.ones(N) * m3)
+    # plt.xscale('log')
+    # plt.show()
 
     # for b in bandits:
     #   print(b.mean)

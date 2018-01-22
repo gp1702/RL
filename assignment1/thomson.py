@@ -90,20 +90,21 @@ def run_experiment(m1, m2, m3, N):
 
 
 if __name__ == '__main__':
-    m1 = 1.0
-    m2 = 2.0
-    m3 = 3.0
-    eps = run_experiment_decaying_epsilon(m1, m2, m3, 2000)
-    oiv = run_experiment_oiv(m1, m2, m3, 2000)
-    ucb = run_experiment_ucb(m1, m2, m3, 2000)
-    bayes = run_experiment(m1, m2, m3, 2000)
+    m1 = 0.9
+    m2 = 0.8
+    m3 = 0.7
+    trials = 1000
+    eps = run_experiment_decaying_epsilon(m1, m2, m3, trials)
+    oiv = run_experiment_oiv(m1, m2, m3, trials)
+    ucb = run_experiment_ucb(m1, m2, m3, trials)
+    bayes = run_experiment(m1, m2, m3, trials)
 
     # log scale plot
     plt.plot(eps, label='decaying-epsilon-greedy')
     plt.plot(oiv, label='optimistic')
     plt.plot(ucb, label='ucb1')
     plt.plot(bayes, label='bayesian')
-    plt.legend()
+    plt.legend(bbox_to_anchor=(0.78, 1), loc=2, borderaxespad=0., prop={'size': 6})
     plt.xscale('log')
     plt.show()
 
@@ -112,5 +113,5 @@ if __name__ == '__main__':
     plt.plot(oiv, label='optimistic')
     plt.plot(ucb, label='ucb1')
     plt.plot(bayes, label='bayesian')
-    plt.legend()
+    plt.legend(bbox_to_anchor=(0.78, 1), loc=2, borderaxespad=0., prop={'size': 6})
     plt.show()
