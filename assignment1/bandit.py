@@ -7,10 +7,11 @@ class bandit:
 
         #k arms or actions
         self.k = k
+        
         #set rewards for k actions
         np.random.seed(seed=seed)
         self.true_rewards = np.random.normal(0, variance, k)
-        np.random.seed(seed=None)
+
         self.bestaction = np.random.choice(np.flatnonzero(self.true_rewards == self.true_rewards.max()))
 
     def getActionValue(self, action):
@@ -42,7 +43,7 @@ class bandit:
         #Q_a = Q_a + self.c * np.sqrt(np.divide(np.log(t-1), N, where=N!=0))
         #get greedy action and resolve ties randomly
         action = np.random.choice(np.flatnonzero(Q_a == Q_a.max()))
-
+        #print(N)
         return action
 
     def thompson(self):
@@ -128,12 +129,14 @@ class bandit:
         return optimal_reward
 
 
-    def plot(self, savedir, noshow=False):
+    def plot(self, savedir, noshow=False, ylim=None):
         timesteps = range(1, self.timesteps+1)
         plt.plot(timesteps, self.regret_overtime, label=self.name)
         plt.legend()
         #plt.xscale('log')
         if(noshow is False):
+            if(ylim is not None):
+                plt.ylim(ymax=ylim)
             plt.xlabel('Time Steps')
             plt.ylabel('Regret')
             plt.show()
