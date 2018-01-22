@@ -3,12 +3,14 @@ import matplotlib.pyplot as plt
 import os
 
 class bandit:
-    def __init__(self, k):
+    def __init__(self, k, variance=1, seed=123):
 
         #k arms or actions
         self.k = k
         #set rewards for k actions
-        self.true_rewards = np.random.normal(0, 1, k)
+        np.random.seed(seed=seed)
+        self.true_rewards = np.random.normal(0, variance, k)
+        np.random.seed(seed=None)
         self.bestaction = np.random.choice(np.flatnonzero(self.true_rewards == self.true_rewards.max()))
 
     def getActionValue(self, action):
