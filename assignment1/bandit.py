@@ -93,6 +93,9 @@ class bandit:
         regret = self.true_rewards[self.bestaction] - self.true_rewards[action]
         self.regret = (self.regret * float(t-1) + regret) / float(t)
 
+        optimal_reward = int(self.bestaction==action)
+        self.optimal_reward += optimal_reward
+
         return self.regret
 
     def start(self, timesteps, name, c=0, eps=0.01):
@@ -111,15 +114,18 @@ class bandit:
         self.betas = np.zeros(self.k)
         self.avg_reward = 0.
         self.regret = 0.
+        self.optimal_reward = 0
 
         regret_overtime = []
+        optimal_reward = []
         for t in range(1, timesteps+1):
             regret_overtime.append(self.iterate(t))
+            optimal_reward.append(float(self.optimal_reward)/float(t))
             #print("\r%d"%(t),end="\r")
 
         self.regret_overtime = regret_overtime
 
-        return regret_overtime
+        return optimal_reward
 
 
     def plot(self, savedir, noshow=False):
@@ -128,6 +134,8 @@ class bandit:
         plt.legend()
         #plt.xscale('log')
         if(noshow is False):
+            plt.xlabel('Time Steps')
+            plt.ylabel('Regret')
             plt.show()
             #plt.savefig(os.path.join(savedir, self.name+'.png'), bbox_inches='tight')
 
