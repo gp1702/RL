@@ -50,12 +50,12 @@ def run_experiment_decaying_epsilon(m1, m2, m3, N):
     cumulative_average = np.cumsum(data) / (np.arange(N) + 1)
 
     # plot moving average ctr
-    # plt.plot(cumulative_average)
-    # plt.plot(np.ones(N) * m1)
-    # plt.plot(np.ones(N) * m2)
-    # plt.plot(np.ones(N) * m3)
-    # plt.xscale('log')
-    # plt.show()
+    plt.plot(cumulative_average)
+    plt.plot(np.ones(N) * m1)
+    plt.plot(np.ones(N) * m2)
+    plt.plot(np.ones(N) * m3)
+    plt.xscale('log')
+    plt.show()
 
     for b in bandits:
         print(b.mean)
@@ -79,20 +79,20 @@ def run_experiment(m1, m2, m3, N):
     cumulative_average = np.cumsum(data) / (np.arange(N) + 1)
 
     # plot moving average ctr
-    # plt.plot(cumulative_average)
-    # plt.plot(np.ones(N) * m1)
-    # plt.plot(np.ones(N) * m2)
-    # plt.plot(np.ones(N) * m3)
-    # plt.xscale('log')
-    # plt.show()
+    plt.plot(cumulative_average)
+    plt.plot(np.ones(N) * m1)
+    plt.plot(np.ones(N) * m2)
+    plt.plot(np.ones(N) * m3)
+    plt.xscale('log')
+    plt.show()
 
     return cumulative_average
 
 
 if __name__ == '__main__':
-    m1 = 0.9
-    m2 = 0.8
-    m3 = 0.7
+    m1 = 10
+    m2 = 9
+    m3 = 8
     trials = 1000
     eps = run_experiment_decaying_epsilon(m1, m2, m3, trials)
     oiv = run_experiment_oiv(m1, m2, m3, trials)
