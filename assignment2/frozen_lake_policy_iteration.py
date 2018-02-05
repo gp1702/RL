@@ -74,9 +74,12 @@ def policy_iteration(R, T, policy, max_iter=100, k=100, gamma=1.0):
 
         # calculate q-function
         q = np.einsum('ijk,ijk->ij', T, R + gamma * v[None, None, :])
+        print("Value-Function:", v)
+        print("Action-Value-Function:", q)
 
         # update policy
         policy = np.argmax(q, axis=1)
+        print("Policy",policy)
 
         # if policy did not change, stop
         if np.array_equal(policy, opt):
@@ -85,16 +88,52 @@ def policy_iteration(R, T, policy, max_iter=100, k=100, gamma=1.0):
     return policy
 
 
+def value_iteration(env, gamma, R, T, max_iterations=int(1e3), tol=1e-3):
+    """Runs value iteration for a given gamma and environment.
+    See page 90 (pg 108 pdf) of the Sutton and Barto Second Edition
+    book.
+    http://webdocs.cs.ualberta.ca/~sutton/book/bookdraft2016sep.pdf
+    Parameters
+    ----------
+    env: gym.core.Environment
+      The environment to compute value iteration for. Must have nS,
+      nA, and P as attributes.
+    gamma: float
+      Discount factor, must be in range [0, 1)
+    max_iterations: int
+      The maximum number of iterations to run before stopping.
+    tol: float
+      Determines when value function has converged.
+    Returns
+    -------
+    np.ndarray, iteration
+      The value function and the number of iterations it took to converge.
+    """
+
+    value_func = np.zeros(env.nS)
+
+    for i in range(max_iterations):
+      # shape = (nS, nA)
+      prev_value_func = value_func.copy()
+      q = np.einsum("ijk,ijk -> ij", env.T, env.R + gamma * value_func)
+      value_func = np.max(q, axis=1)
+
+      if np.max(np.abs(value_func-prev_value_func)) < tol:
+        break
+
+    return value_func, i
+
+
 # start environment.
 env = gym.make('FrozenLake-v0')
-nA, nS = env.nA, env.nS
+nA, nS = env.env.nA, env.env.nS
 
 # reward and transition matrices
 T = np.zeros([nS, nA, nS])
 R = np.zeros([nS, nA, nS])
 for s in range(nS):
     for a in range(nA):
-        transitions = env.P[s][a]
+        transitions = env.env.P[s][a]
         for p_trans, next_s, rew, done in transitions:
             T[s, a, next_s] += p_trans
             R[s, a, next_s] = rew
@@ -108,14 +147,14 @@ opt = policy_iteration(R, T, policy, max_iter=10000, k=100, gamma=0.9999)
 max_time_steps = 100000
 n_episode = 1
 
-env.monitor.start('./frozenlake-experiment', force=True)
+#env.monitor.start('./frozenlake-experiment', force=True)
 
 for i_episode in range(n_episode):
 
     observation = env.reset()  # reset environment to beginning
 
     # run for several time-steps
-    for t in xrange(max_time_steps):
+    for t in range(max_time_steps):
         # display experiment
         # env.render()
 
@@ -126,12 +165,13 @@ for i_episode in range(n_episode):
         observation, reward, done, info = env.step(action)
 
         if done:
-            # env.render()
+            env.render()
             print
             "Simulation finished after {0} timesteps".format(t)
             break
 
-env.monitor.close()
+#env.monitor.close()
 
-gym.upload('/home/lucianodp/Documents/eua/reinforcement_learning/notebooks/frozenlake-experiment',
-           api_key='sk_qkx3jhBbTRamxadtXqA3pQ')
+
+#gym.upload('/home/lucianodp/Documents/eua/reinforcement_learning/notebooks/frozenlake-experiment',
+           #api_key='sk_qkx3jhBbTRamxadtXqA3pQ')
