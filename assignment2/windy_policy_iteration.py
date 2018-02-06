@@ -67,7 +67,7 @@ if __name__ == '__main__':
             else:
               p = 0.5/3
             grid.set_state(s)
-            r = grid.move(a)
+            r = grid.execute(a)
             new_v += p*(r + GAMMA * V[grid.current_state()])
           V[s] = new_v
           biggest_change = max(biggest_change, np.abs(old_v - V[s]))
@@ -91,7 +91,7 @@ if __name__ == '__main__':
             else:
               p = 0.5/3
             grid.set_state(s)
-            r = grid.move(a2)
+            r = grid.execute(a2)
             v += p*(r + GAMMA * V[grid.current_state()])
           if v > best_value:
             best_value = v
@@ -107,4 +107,4 @@ if __name__ == '__main__':
   print_values(V, grid)
   print("policy:")
   print_policy(policy, grid)
-  # result: every move is as bad as losing, so lose as quickly as possible
+  # result: every execute is as bad as losing, so lose as quickly as possible

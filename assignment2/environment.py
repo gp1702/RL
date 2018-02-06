@@ -1,12 +1,7 @@
 # https://deeplearningcourses.com/c/artificial-intelligence-reinforcement-learning-in-python
-# https://www.udemy.com/artificial-intelligence-reinforcement-learning-in-python
-from __future__ import print_function, division
+
 from builtins import range
-# Note: you may need to update your version of future
-# sudo pip install -U future
 
-
-import numpy as np
 
 
 class Grid: # Environment
@@ -32,8 +27,8 @@ class Grid: # Environment
   def is_terminal(self, s):
     return s not in self.actions
 
-  def move(self, action):
-    # check if legal move first
+  def execute(self, action):
+    # check if legal execute first
     if action in self.actions[(self.i, self.j)]:
       if action == 'U':
         self.i -= 1
@@ -46,7 +41,7 @@ class Grid: # Environment
     # return a reward (if any)
     return self.rewards.get((self.i, self.j), 0)
 
-  def undo_move(self, action):
+  def undo_execute(self, action):
     # these are the opposite of what U/D/L/R should normally do
     if action == 'U':
       self.i += 1
@@ -100,8 +95,8 @@ def standard_grid():
 
 
 def negative_grid(step_cost=-0.1):
-  # in this game we want to try to minimize the number of moves
-  # so we will penalize every move
+  # in this game we want to try to minimize the number of executes
+  # so we will penalize every execute
   g = standard_grid()
   g.rewards.update({
     (0, 0): step_cost,
@@ -125,7 +120,7 @@ def print_values(V, g):
       if v >= 0:
         print(" %.2f|" % v, end="")
       else:
-        print("%.2f|" % v, end="") # -ve sign takes up an extra space
+        print("%.2f|" % v, end="")
     print("")
 
 

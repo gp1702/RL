@@ -58,7 +58,7 @@ if __name__ == '__main__':
         if s in policy:
           a = policy[s]
           grid.set_state(s)
-          r = grid.move(a)
+          r = grid.execute(a)
           V[s] = r + GAMMA * V[grid.current_state()]
           biggest_change = max(biggest_change, np.abs(old_v - V[s]))
 
@@ -75,7 +75,7 @@ if __name__ == '__main__':
         # loop through all possible actions to find the best current action
         for a in ACTION_SET:
           grid.set_state(s)
-          r = grid.move(a)
+          r = grid.execute(a)
           v = r + GAMMA * V[grid.current_state()]
           if v > best_value:
             best_value = v

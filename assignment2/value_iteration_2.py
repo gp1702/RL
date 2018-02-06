@@ -20,7 +20,7 @@ ALL_POSSIBLE_ACTIONS = ('U', 'D', 'L', 'R')
 if __name__ == '__main__':
   # this grid gives you a reward of -0.1 for every non-terminal state
   # we want to see if this will encourage finding a shorter path to the goal
-  grid = negative_grid()
+  grid = standard_grid()
 
   # print rewards
   print("rewards:")
@@ -59,7 +59,7 @@ if __name__ == '__main__':
         new_v = float('-inf')
         for a in ALL_POSSIBLE_ACTIONS:
           grid.set_state(s)
-          r = grid.move(a)
+          r = grid.execute(a)
           v = r + GAMMA * V[grid.current_state()]
           if v > new_v:
             new_v = v
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     # loop through all possible actions to find the best current action
     for a in ALL_POSSIBLE_ACTIONS:
       grid.set_state(s)
-      r = grid.move(a)
+      r = grid.execute(a)
       v = r + GAMMA * V[grid.current_state()]
       if v > best_value:
         best_value = v

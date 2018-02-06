@@ -64,7 +64,7 @@ if __name__ == '__main__':
         p_a = 1.0 / len(grid.actions[s]) # each action has equal probability
         for a in grid.actions[s]:
           grid.set_state(s)
-          r = grid.move(a)
+          r = grid.execute(a)
           new_v += p_a * (r + gamma * V[grid.current_state()])
         V[s] = new_v
         biggest_change = max(biggest_change, np.abs(old_v - V[s]))
@@ -107,7 +107,7 @@ if __name__ == '__main__':
       if s in policy:
         a = policy[s]
         grid.set_state(s)
-        r = grid.move(a)
+        r = grid.execute(a)
         V[s] = r + gamma * V[grid.current_state()]
         biggest_change = max(biggest_change, np.abs(old_v - V[s]))
 
