@@ -115,3 +115,24 @@ def negative_grid(step_cost=-0.1):
     (2, 3): step_cost,
   })
   return g
+
+
+def print_values(V, g):
+  for i in range(g.width):
+    print("---------------------------")
+    for j in range(g.height):
+      v = V.get((i,j), 0)
+      if v >= 0:
+        print(" %.2f|" % v, end="")
+      else:
+        print("%.2f|" % v, end="") # -ve sign takes up an extra space
+    print("")
+
+
+def print_policy(P, g):
+  for i in range(g.width):
+    print("---------------------------")
+    for j in range(g.height):
+      a = P.get((i,j), ' ')
+      print("  %s  |" % a, end="")
+    print("")
